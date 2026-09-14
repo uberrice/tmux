@@ -1,0 +1,10 @@
+#!/bin/bash
+start="${1:-$HOME}"
+tmp="$(mktemp -t tmux-yazi.XXXXXX)"
+pane="${TMUX_PANE:-$(tmux display-message -p '#{pane_id}')}"
+tmux display-popup -E -d "$start" -w 90% -h 90% \
+  "$HOME/.config/tmux/yazipop-run" "$tmp" "$start"
+if [ -s "$tmp" ]; then
+  tmux send-keys -t "$pane" "cd -- $(printf %q "$(cat "$tmp")")" Enter
+fi
+rm -f "$tmp"
