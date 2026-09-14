@@ -1,7 +1,0 @@
-#!/bin/bash
-tmp="$1"
-start="${2:-$HOME}"
-sess="yazipop-$$"
-tmux new-session -d -s "$sess" -c "$start" yazi --cwd-file "$tmp" \; \
-  set-option -t "$sess" status off \; \
-  attach-session -t "$sess"

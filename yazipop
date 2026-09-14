@@ -1,9 +1,15 @@
 #!/bin/bash
+if [ "$1" = "--popup" ]; then
+  sess="yazipop-$$"
+  tmux new-session -d -s "$sess" -c "$3" yazi --cwd-file "$2" \; \
+    set-option -t "$sess" status off \; \
+    attach-session -t "$sess"
+  exit
+fi
 start="${1:-$HOME}"
 tmp="$(mktemp -t tmux-yazi.XXXXXX)"
 pane="${TMUX_PANE:-$(tmux display-message -p '#{pane_id}')}"
-tmux display-popup -E -d "$start" -w 90% -h 90% \
-  "$HOME/.config/tmux/yazipop-run" "$tmp" "$start"
+tmux display-popup -E -d "$start" -w 90% -h 90% "$0" --popup "$tmp" "$start"
 if [ -s "$tmp" ]; then
   tmux send-keys -t "$pane" "cd -- $(printf %q "$(cat "$tmp")")" Enter
 fi
